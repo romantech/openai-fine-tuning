@@ -1,7 +1,7 @@
 {
-  "name": "open-fine-tuning-node",
+  "name": "openai-fine-tuning",
   "version": "1.0.0",
-  "description": "",
+  "description": "OpenAI Fine-tuning for JSON Output",
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
