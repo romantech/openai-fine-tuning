@@ -1,0 +1,22 @@
+{
+  "name": "open-fine-tuning-node",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepare": "node ./src/run-prepare.js",
+    "transform": "node ./src/run-transform.js",
+    "finetune": "node ./src/run-fine-tune.js",
+    "model": "node ./src/run-model.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "openai": "^4.2.0"
+  },
+  "dependencies": {
+    "dotenv": "^16.3.1"
+  }
+}
