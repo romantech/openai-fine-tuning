@@ -1,1 +1,1 @@
-# Open Fine Tuning Node
+# OpenAI Fine-tuning for JSON Output
