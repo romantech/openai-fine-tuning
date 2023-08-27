@@ -5,44 +5,44 @@ import { trainingDataPath } from './misc/file-paths.js';
 
 checkEnv();
 
-const SLEEP_TIME_MS = 3000;
-const STATUS_PROCESSED = 'processed';
-const STATUS_SUCCEEDED = 'succeeded';
+const WAIT_INTERVAL_MS = 3000;
+const FILE_STATUS_PROCESSED = 'processed';
+const JOB_STATUS_SUCCEEDED = 'succeeded';
 
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 const openaiAPI = new OpenAI({ apiKey: process.env.API_KEY });
 
-const waitForFileProcessing = async fileId => {
+const awaitFileProcessingCompletion = async fileId => {
   while (true) {
     console.log('Waiting for file to process...');
     const fileHandle = await openaiAPI.files.retrieve(fileId);
 
-    if (fileHandle.status === STATUS_PROCESSED) {
+    if (fileHandle.status === FILE_STATUS_PROCESSED) {
       console.log('File processed');
       break;
     }
 
-    await sleep(SLEEP_TIME_MS);
+    await sleep(WAIT_INTERVAL_MS);
   }
 };
 
-const waitForFineTuningCompletion = async jobId => {
+const awaitFineTuningJobCompletion = async jobId => {
   while (true) {
     console.log('Waiting for fine-tuning to complete...');
     const jobHandle = await openaiAPI.fineTuning.jobs.retrieve(jobId);
 
-    if (jobHandle.status === STATUS_SUCCEEDED) {
+    if (jobHandle.status === JOB_STATUS_SUCCEEDED) {
       console.log('Fine-tuning complete');
       console.log('Fine-tuned model info:', jobHandle);
       console.log('Model id:', jobHandle.fine_tuned_model);
       break;
     }
 
-    await sleep(SLEEP_TIME_MS);
+    await sleep(WAIT_INTERVAL_MS);
   }
 };
 
-const fineTune = async () => {
+const executeFineTuningWorkflow = async () => {
   // Upload file
   const fileUpload = await openaiAPI.files.create({
     file: fs.createReadStream(trainingDataPath),
@@ -53,7 +53,7 @@ const fineTune = async () => {
   console.log('Uploaded file id:', fileId);
 
   // Wait for file to be processed
-  await waitForFileProcessing(fileId);
+  await awaitFileProcessingCompletion(fileId);
 
   // Start fine-tuning
   const job = await openaiAPI.fineTuning.jobs.create({
@@ -65,7 +65,7 @@ const fineTune = async () => {
   console.log('Fine-tuning job id:', jobId);
 
   // Wait for fine-tuning to complete
-  await waitForFineTuningCompletion(jobId);
+  await awaitFineTuningJobCompletion(jobId);
 };
 
-fineTune().catch(console.error);
+executeFineTuningWorkflow().catch(console.error);

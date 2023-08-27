@@ -1,13 +1,13 @@
 import fs, { promises as fsp } from 'fs';
-import { trainingPrompt } from './data/training-prompt.js';
+import { trainingPrompt as prompt } from './data/training-prompt.js';
 import { checkEnv } from './misc/env-checker.js';
 import { trainingDataPath, trainingExamplesPath } from './misc/file-paths.js';
 
 checkEnv();
 
-const transformPrompt = trainingPrompt; // TODO Change this to your own prompt
+const transformPrompt = prompt; // TODO Change this to your own prompt
 
-async function readJSONFile(filePath) {
+const readTrainingDataJSON = async filePath => {
   try {
     const data = await fsp.readFile(filePath, 'utf8');
     return JSON.parse(data);
@@ -15,9 +15,9 @@ async function readJSONFile(filePath) {
     console.error(`Error reading the file ${filePath}:`, err);
     throw err;
   }
-}
+};
 
-async function writeFormattedMessages(examples, outputFilePath) {
+const writeAndFormatTrainingMessages = async (examples, outputFilePath) => {
   const writeStream = fs.createWriteStream(outputFilePath);
 
   writeStream
@@ -30,26 +30,27 @@ async function writeFormattedMessages(examples, outputFilePath) {
     });
 
   for (const example of examples) {
-    const exampleString = JSON.stringify(example);
+    const serializedExample = JSON.stringify(example);
     const formattedMessage = {
       messages: [
         { role: 'system', content: transformPrompt },
-        { role: 'assistant', content: exampleString },
+        { role: 'assistant', content: serializedExample },
       ],
     };
+
     writeStream.write(JSON.stringify(formattedMessage) + '\n');
   }
 
   writeStream.end();
-}
+};
 
-async function transform() {
+const transform = async () => {
   try {
-    const examples = await readJSONFile(trainingExamplesPath);
-    await writeFormattedMessages(examples, trainingDataPath);
+    const examples = await readTrainingDataJSON(trainingExamplesPath);
+    await writeAndFormatTrainingMessages(examples, trainingDataPath);
   } catch (err) {
     console.error('An error occurred:', err);
   }
-}
+};
 
 await transform();
