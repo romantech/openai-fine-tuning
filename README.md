@@ -2,7 +2,8 @@
 
 ## Introduction
 
-This is an example project that fine-tunes OpenAI's main models to output in JSON format. This project aims to reduce the cost and improve the consistency of the output data for applications utilizing OpenAI's models. Written in Javascript (Node.js), it is based on the Python [open-finetuning](https://github.com/horosin/open-finetuning) repository.
+This project, written in JavaScript (Node.js), fine-tunes OpenAI's primary models to produce JSON-formatted output. It aims to enhance both cost-efficiency and data consistency for applications that utilize the OpenAI API. Portions of the codebase are inspired by the Python [open-finetuning](https://github.com/horosin/open-finetuning).
+
 
 ## Prerequisites
 - Node.js 16 LTS or later
@@ -11,27 +12,27 @@ This is an example project that fine-tunes OpenAI's main models to output in JSO
 ## Usage
 
 ### Step 1: Set OpenAI API Key Environment Variable
-Set your OpenAI API key as an environment variable named `API_KEY`.
+Define your OpenAI API key by setting an environment variable named `API_KEY`.
 ```bash
 export API_KEY=your-openai-api-key
 ```
 
 ### Step 2: Generate Sample Training Data
-- Run `npm run prepare`
-- Use a prompt that can produce the expected output.
-- For the best sample quality, using the GPT-4 model is recommended.
+- Execute `npm run prepare`.
+- Use a prompt capable of generating the desired output.
+- For optimal sample quality, it is recommended to use GPT-4.
 - OpenAI requires a minimum of `50` samples.
-- Sample data will be stored in `src/data/training-examples.json`.
+- The sample data will be stored in `src/data/training-examples.json`.
 
 ### Step 3: Generate System Message Formatting Data
-- Run `npm run transform`
-- Use a simplified prompt compared to before.
-- Results are stored in `src/data/training-data.jsonl`.
+- Execute `npm run transform`.
+- Use a more straightforward prompt than the previous step.
+- The results will be saved in `src/data/training-data.jsonl`.
 
 ### Step 4: Proceed with Fine-tuning
-- Run `npm run finetune`
-- Once fine-tuning is complete, the model ID will be printed to the console.
+- Execute `npm run finetune`.
+- Upon completion, the fine-tuned model ID will be displayed on the console.
 
 ### Step 5: Test the Fine-tuned Model
-- Run `npm run model`
-- Test the model using a simplified prompt.
+- Execute `npm run model`.
+- Test the model using a simplified version of the original prompt.
