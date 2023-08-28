@@ -24,10 +24,11 @@ const generateTrainingExample = async input => {
       ],
       ...openAIOptions,
     });
-    return JSON.parse(response.choices[0].message.content);
+    const content = response.choices[0].message.content;
+    console.log(content);
+    return JSON.parse(content);
   } catch (error) {
     console.error('Error generating example:', error);
-    throw error;
   }
 };
 
