@@ -2,7 +2,7 @@ import { checkEnv, checkRequiredFiles, openaiAPI } from './misc/index.js';
 import { transformPrompt } from './data/index.js';
 
 checkEnv();
-await checkRequiredFiles(['trainingPrompt']);
+await checkRequiredFiles(['transformPrompt']);
 
 const fineTunedModel = ''; // TODO: Replace with your fine-tuned model id
 const content = ''; // TODO: Replace with your input
