@@ -34,4 +34,4 @@ export API_KEY=your-openai-api-key
 
 ### Step 5: Test the Fine-tuned Model
 - Run `npm run model`
-- Test using a simplified prompt.
+- Test the model using a simplified prompt.
