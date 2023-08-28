@@ -1,5 +1,5 @@
 import fs, { promises as fsp } from 'fs';
-import { trainingPrompt as prompt } from './data/training-prompt.js';
+import { transformPrompt as prompt } from './data/transform-prompt.js';
 import { checkEnv } from './misc/env-checker.js';
 import { trainingDataPath, trainingExamplesPath } from './misc/file-paths.js';
 

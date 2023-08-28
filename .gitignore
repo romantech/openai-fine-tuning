@@ -130,5 +130,4 @@ dist
 .yarn/install-state.gz
 .pnp.*
 
-training-*
-
+src/data/*

@@ -1,5 +1,5 @@
 import OpenAI from 'openai';
-import { trainingPrompt as prompt } from './data/training-prompt.js';
+import { transformPrompt as prompt } from './data/transform-prompt.js';
 import { checkEnv } from './misc/env-checker.js';
 
 checkEnv();

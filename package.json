@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "prepare": "node ./src/run-prepare.js",
     "transform": "node ./src/run-transform.js",
-    "finetune": "node ./src/run-fine-tune.js",
+    "finetune": "node ./src/run-finetune.js",
     "model": "node ./src/run-model.js"
   },
   "keywords": [],
