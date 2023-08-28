@@ -1,22 +1,22 @@
 import { promises as fsp } from 'fs';
-import OpenAI from 'openai';
-import inputList from './data/training-input-list.json' assert { type: 'json' };
-import { trainingPrompt as prompt } from './data/training-prompt.js';
-import { checkEnv } from './misc/env-checker.js';
-import { trainingExamplesPath } from './misc/file-paths.js';
+import { trainingInputList, trainingPrompt } from './data/index.js';
+import {
+  checkEnv,
+  checkRequiredFiles,
+  openaiAPI,
+  PATHS,
+} from './misc/index.js';
 
 checkEnv();
-
-const openaiAPI = new OpenAI({ apiKey: process.env.API_KEY });
+await checkRequiredFiles(['trainingPrompt', 'trainingInputList']);
 
 const openAIOptions = { model: 'gpt-4', temperature: 0.4 }; // TODO Change this to your own options
-const trainingPrompt = prompt; // TODO Change this to your own prompt
-const trainingInputList = inputList; // TODO Change this to your own user content
-
 const generatedExamples = [];
 
 const generateTrainingExample = async input => {
   try {
+    console.log('Starting generation for input:', input);
+
     const response = await openaiAPI.chat.completions.create({
       messages: [
         { role: 'system', content: trainingPrompt },
@@ -24,9 +24,11 @@ const generateTrainingExample = async input => {
       ],
       ...openAIOptions,
     });
-    const content = response.choices[0].message.content;
-    console.log(content);
-    return JSON.parse(content);
+
+    const content = JSON.parse(response.choices[0].message.content);
+    console.dir(content, { depth: null });
+
+    return content;
   } catch (error) {
     console.error('Error generating example:', error);
   }
@@ -34,7 +36,7 @@ const generateTrainingExample = async input => {
 
 const saveExamplesToFile = async exampleArray => {
   try {
-    await fsp.writeFile(trainingExamplesPath, JSON.stringify(exampleArray));
+    await fsp.writeFile(PATHS.TRAINING_EXAMPLES, JSON.stringify(exampleArray));
     console.log('File has been updated');
   } catch (error) {
     console.error('An error occurred while saving the file:', error);

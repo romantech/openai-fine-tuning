@@ -1,23 +1,21 @@
 import fs from 'fs';
-import OpenAI from 'openai';
-import { checkEnv } from './misc/env-checker.js';
-import { trainingDataPath } from './misc/file-paths.js';
+import {
+  checkEnv,
+  openaiAPI,
+  PATHS,
+  sleep,
+  STATUS,
+  WAIT_INTERVAL_MS,
+} from './misc/index.js';
 
 checkEnv();
-
-const WAIT_INTERVAL_MS = 3000;
-const FILE_STATUS_PROCESSED = 'processed';
-const JOB_STATUS_SUCCEEDED = 'succeeded';
-
-const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
-const openaiAPI = new OpenAI({ apiKey: process.env.API_KEY });
 
 const awaitFileProcessingCompletion = async fileId => {
   while (true) {
     console.log('Waiting for file to process...');
     const fileHandle = await openaiAPI.files.retrieve(fileId);
 
-    if (fileHandle.status === FILE_STATUS_PROCESSED) {
+    if (fileHandle.status === STATUS.FILE_PROCESSED) {
       console.log('File processed');
       break;
     }
@@ -31,7 +29,7 @@ const awaitFineTuningJobCompletion = async jobId => {
     console.log('Waiting for fine-tuning to complete...');
     const jobHandle = await openaiAPI.fineTuning.jobs.retrieve(jobId);
 
-    if (jobHandle.status === JOB_STATUS_SUCCEEDED) {
+    if (jobHandle.status === STATUS.JOB_SUCCEEDED) {
       console.log('Fine-tuning complete');
       console.log('Fine-tuned model info:', jobHandle);
       console.log('Model id:', jobHandle.fine_tuned_model);
@@ -45,7 +43,7 @@ const awaitFineTuningJobCompletion = async jobId => {
 const executeFineTuningWorkflow = async () => {
   // Upload file
   const fileUpload = await openaiAPI.files.create({
-    file: fs.createReadStream(trainingDataPath),
+    file: fs.createReadStream(PATHS.TRAINING_DATA),
     purpose: 'fine-tune',
   });
 

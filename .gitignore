@@ -131,3 +131,4 @@ dist
 .pnp.*
 
 src/data/*
+!src/data/index.js

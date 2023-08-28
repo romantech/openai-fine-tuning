@@ -1,11 +1,9 @@
 import fs, { promises as fsp } from 'fs';
-import { transformPrompt as prompt } from './data/transform-prompt.js';
-import { checkEnv } from './misc/env-checker.js';
-import { trainingDataPath, trainingExamplesPath } from './misc/file-paths.js';
+import { transformPrompt } from './data/index.js';
+import { checkEnv, checkRequiredFiles, PATHS } from './misc/index.js';
 
 checkEnv();
-
-const transformPrompt = prompt; // TODO Change this to your own prompt
+await checkRequiredFiles(['transformPrompt']);
 
 const readTrainingDataJSON = async filePath => {
   try {
@@ -46,8 +44,8 @@ const writeAndFormatTrainingMessages = async (examples, outputFilePath) => {
 
 const transform = async () => {
   try {
-    const examples = await readTrainingDataJSON(trainingExamplesPath);
-    await writeAndFormatTrainingMessages(examples, trainingDataPath);
+    const examples = await readTrainingDataJSON(PATHS.TRAINING_EXAMPLES);
+    await writeAndFormatTrainingMessages(examples, PATHS.TRAINING_DATA);
   } catch (err) {
     console.error('An error occurred:', err);
   }

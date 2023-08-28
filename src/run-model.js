@@ -1,14 +1,11 @@
-import OpenAI from 'openai';
-import { transformPrompt as prompt } from './data/transform-prompt.js';
-import { checkEnv } from './misc/env-checker.js';
+import { checkEnv, checkRequiredFiles, openaiAPI } from './misc/index.js';
+import { transformPrompt } from './data/index.js';
 
 checkEnv();
-
-const openaiAPI = new OpenAI({ apiKey: process.env.API_KEY });
+await checkRequiredFiles(['trainingPrompt']);
 
 const fineTunedModel = ''; // TODO: Replace with your fine-tuned model id
 const content = ''; // TODO: Replace with your input
-const transformPrompt = prompt; // TODO: Replace with your own prompt
 
 const fetchCompletion = async () => {
   try {
