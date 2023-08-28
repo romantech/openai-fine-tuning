@@ -21,7 +21,7 @@ export API_KEY=your-openai-api-key
 - Use a prompt that can produce the expected output.
 - For the best sample quality, using the GPT-4 model is recommended.
 - OpenAI requires a minimum of `50` samples.
-- Sample data will be stored in `src/data/training-examples.json.`
+- Sample data will be stored in `src/data/training-examples.json`.
 
 ### Step 3: Generate System Message Formatting Data
 - Run `npm run transform`
