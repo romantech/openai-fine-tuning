@@ -28,15 +28,11 @@ const writeAndFormatTrainingMessages = async (examples, outputFilePath) => {
     });
 
   for (const example of examples) {
-    const serializedExample = JSON.stringify(example);
-    const formattedMessage = {
-      messages: [
-        { role: 'system', content: transformPrompt },
-        { role: 'assistant', content: serializedExample },
-      ],
-    };
+    const system = { role: 'system', content: transformPrompt };
+    const assistant = { role: 'assistant', content: JSON.stringify(example) };
+    const formatted = { messages: [system, assistant] };
 
-    writeStream.write(JSON.stringify(formattedMessage) + '\n');
+    writeStream.write(JSON.stringify(formatted) + '\n');
   }
 
   writeStream.end();
