@@ -16,12 +16,11 @@ const generatedExamples = [];
 const generateTrainingExample = async input => {
   try {
     console.log('Starting generation for input:', input);
+    const system = { role: 'system', content: trainingPrompt };
+    const user = { role: 'user', content: JSON.stringify(input) };
 
     const response = await openaiAPI.chat.completions.create({
-      messages: [
-        { role: 'system', content: trainingPrompt },
-        { role: 'user', content: JSON.stringify(input) },
-      ],
+      messages: [system, user],
       ...openAIOptions,
     });
 
