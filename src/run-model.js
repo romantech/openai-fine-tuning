@@ -4,13 +4,13 @@ import { transformPrompt } from './data/index.js';
 checkEnv();
 await checkRequiredFiles(['transformPrompt']);
 
-const fineTunedModel = ''; // TODO: Replace with your fine-tuned model id
-const content = ''; // TODO: Replace with your input
+const model = ''; // TODO: Replace with your fine-tuned model id
+const content = ''; // TODO: Replace with your user input
 
 const fetchCompletion = async () => {
   try {
     const response = await openaiAPI.chat.completions.create({
-      model: fineTunedModel,
+      model,
       messages: [
         { role: 'system', content: transformPrompt },
         { role: 'user', content },

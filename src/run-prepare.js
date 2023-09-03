@@ -1,5 +1,5 @@
 import { promises as fsp } from 'fs';
-import { trainingInputList, trainingPrompt } from './data/index.js';
+import { trainingInputs, trainingPrompt } from './data/index.js';
 import {
   checkEnv,
   checkRequiredFiles,
@@ -8,12 +8,12 @@ import {
 } from './misc/index.js';
 
 checkEnv();
-await checkRequiredFiles(['trainingPrompt', 'trainingInputList']);
+await checkRequiredFiles(['trainingPrompt', 'trainingInputs']);
 
-const openAIOptions = { model: 'gpt-4', temperature: 0.4 }; // TODO Change this to your own options
+const openAIOptions = { model: 'gpt-4', temperature: 0.4 }; // TODO Change to your own options
 const generatedExamples = [];
 
-const generateTrainingExample = async input => {
+const generateExample = async input => {
   try {
     console.log('Starting generation for input:', input);
     const system = { role: 'system', content: trainingPrompt };
@@ -33,9 +33,9 @@ const generateTrainingExample = async input => {
   }
 };
 
-const saveExamplesToFile = async exampleArray => {
+const saveExamples = async examples => {
   try {
-    await fsp.writeFile(PATHS.TRAINING_EXAMPLES, JSON.stringify(exampleArray));
+    await fsp.writeFile(PATHS.TRAINING_EXAMPLES, JSON.stringify(examples));
     console.log('File has been updated');
   } catch (error) {
     console.error('An error occurred while saving the file:', error);
@@ -43,12 +43,12 @@ const saveExamplesToFile = async exampleArray => {
   }
 };
 
-const generateAndSaveCompletions = async () => {
-  for (const trainingInput of trainingInputList) {
-    const generatedExample = await generateTrainingExample(trainingInput);
-    if (generatedExample) generatedExamples.push(generatedExample);
+const generateAndSave = async () => {
+  for (const input of trainingInputs) {
+    const example = await generateExample(input);
+    if (example) generatedExamples.push(example);
   }
-  await saveExamplesToFile(generatedExamples);
+  await saveExamples(generatedExamples);
 };
 
-generateAndSaveCompletions().catch(console.error);
+generateAndSave().catch(console.error);

@@ -10,7 +10,7 @@ import {
 
 checkEnv();
 
-const awaitFileProcessingCompletion = async fileId => {
+const awaitFileProcessing = async fileId => {
   while (true) {
     console.log('Waiting for file to process...');
     const fileHandle = await openaiAPI.files.retrieve(fileId);
@@ -24,7 +24,7 @@ const awaitFileProcessingCompletion = async fileId => {
   }
 };
 
-const awaitFineTuningJobCompletion = async jobId => {
+const awaitFineTuningJob = async jobId => {
   while (true) {
     console.log('Waiting for fine-tuning to complete...');
     const jobHandle = await openaiAPI.fineTuning.jobs.retrieve(jobId);
@@ -40,7 +40,7 @@ const awaitFineTuningJobCompletion = async jobId => {
   }
 };
 
-const executeFineTuningWorkflow = async () => {
+const executeFineTuning = async () => {
   // Upload file
   const fileUpload = await openaiAPI.files.create({
     file: fs.createReadStream(PATHS.TRAINING_DATA),
@@ -51,7 +51,7 @@ const executeFineTuningWorkflow = async () => {
   console.log('Uploaded file id:', fileId);
 
   // Wait for file to be processed
-  await awaitFileProcessingCompletion(fileId);
+  await awaitFileProcessing(fileId);
 
   // Start fine-tuning
   const job = await openaiAPI.fineTuning.jobs.create({
@@ -63,7 +63,7 @@ const executeFineTuningWorkflow = async () => {
   console.log('Fine-tuning job id:', jobId);
 
   // Wait for fine-tuning to complete
-  await awaitFineTuningJobCompletion(jobId);
+  await awaitFineTuningJob(jobId);
 };
 
-executeFineTuningWorkflow().catch(console.error);
+executeFineTuning().catch(console.error);
