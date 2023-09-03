@@ -3,7 +3,7 @@ import { transformPrompt } from './data/index.js';
 import { checkEnv, checkRequiredFiles, PATHS, readJSON } from './misc/index.js';
 
 checkEnv();
-await checkRequiredFiles(['transformPrompt']);
+await checkRequiredFiles(['transformPrompt', 'trainingExamples']);
 
 const formatAndWrite = async (examples, outputPath) => {
   const writeStream = fs.createWriteStream(outputPath);

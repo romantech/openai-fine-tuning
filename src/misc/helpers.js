@@ -16,6 +16,14 @@ export const readJSON = async path => {
   }
 };
 
+/**
+ * Converts a camelCase string to UPPER_SNAKE_CASE.
+ * @example toUpperSnakeCase('helloWorld'); // returns 'HELLO_WORLD'
+ */
+const toUpperSnakeCase = str => {
+  return str.replace(/([a-z])([A-Z])/g, '$1_$2').toUpperCase();
+};
+
 const logErrorAndExit = (msg, code = 1) => {
   console.error(msg);
   process.exit(1);
@@ -31,7 +39,7 @@ const checkFile = async (name, path) => {
     const file = await import('../data/index.js').then(module => module[name]);
 
     if (!file) {
-      const msg = `\x1b[33mAn ${name} not found. Please set your prompt in ${path}\x1b[0m`;
+      const msg = `\x1b[33m${name} not found. Please set your prompt in ${path}\x1b[0m`;
       logErrorAndExit(msg);
     }
   } catch (error) {
@@ -39,26 +47,26 @@ const checkFile = async (name, path) => {
   }
 };
 
-const { TRAINING_PROMPT, TRANSFORM_PROMPT, TRAINING_INPUTS } = PATHS;
-
 /**
- * Checks the presence of required files and logs errors when necessary.
+ * Asynchronously checks the presence of required files and logs errors to the console if any are missing.
+ * Skips any file types that are not recognized.
  *
- * @param {Array<'trainingPrompt' | 'transformPrompt' | 'trainingInputs'>} fileNames - The types of files to check.
+ * @async
+ * @param {Array<'trainingPrompt' | 'transformPrompt' | 'trainingInputs' | 'trainingExamples' | 'trainingData'>} fileNames - The types of files to check for their presence. Providing an empty array or a non-array will result in a log message indicating no files to check.
+ * @returns {void} Does not return any value. Side effect: logs messages to the console.
+ * @throws {Error} Does not throw an error, but may log errors and terminate the process through an internal function (`logErrorAndExit`).
+ *
+ * @example
+ * await checkRequiredFiles(['trainingPrompt', 'trainingData']);
  */
 export const checkRequiredFiles = async fileNames => {
   if (!Array.isArray(fileNames) || !fileNames.length) {
     return console.log('No files to check. Please provide a list of files.');
   }
 
-  const list = {
-    trainingPrompt: { name: 'trainingPrompt', path: TRAINING_PROMPT },
-    transformPrompt: { name: 'transformPrompt', path: TRANSFORM_PROMPT },
-    trainingInputs: { name: 'trainingInputs', path: TRAINING_INPUTS },
-  };
-
   for (const fileName of fileNames) {
-    const target = list[fileName];
-    if (target) await checkFile(target.name, target.path);
+    const pathKey = toUpperSnakeCase(fileName);
+    const path = PATHS[pathKey];
+    if (path) await checkFile(fileName, path);
   }
 };
